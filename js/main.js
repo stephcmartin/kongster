@@ -18,15 +18,22 @@ this.load.image('ground', 'assets/images/ground.png')
   create: function() {
     this.ground = this.add.sprite(100, 200, 'ground') //
     this.ground.anchor.setTo(0.5)
-    // this.ground.x = 300
+    this.ground.x = 300
     // this.ground.scale.setTo(1,2) // Changes to ratio
     // this.ground.angle = 60 // this changes the angle of sprite
     this.game.physics.arcade.enable(this.ground)
-    this.ground.body.allowGravity = false // this makes it NOT fall. Uncommit to fall.
+    // this.ground.body.allowGravity = false
+
+    this.ground2 = this.add.sprite(100, 400, 'ground') //
+    this.ground2.anchor.setTo(0.5)
+    this.ground2.x = 300
+    this.game.physics.arcade.enable(this.ground2)
+    this.ground2.body.allowGravity = false // this makes it NOT fall. Uncommit to fall.
   },
 
   update: function() {
     // this.ground.angle += 1 // anything that you want to be doing at all times
+    this.game.physics.arcade.collide(this.ground, this.ground2) // specify which two groups are going to collide
   },
 
 };
