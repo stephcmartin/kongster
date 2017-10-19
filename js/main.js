@@ -29,6 +29,9 @@ this.load.image('ground', 'assets/images/ground.png')
     this.ground2.x = 300
     this.game.physics.arcade.enable(this.ground2)
     this.ground2.body.allowGravity = false // this makes it NOT fall. Uncommit to fall.
+    this.ground2.body.immovable = true // this makes the ground NOT move.
+
+    this.ground3 = this.add.sprite(100, 530, 'ground')
   },
 
   update: function() {
@@ -39,7 +42,7 @@ this.load.image('ground', 'assets/images/ground.png')
 };
 
 //initiate the Phaser framework
-var game = new Phaser.Game(360, 592, Phaser.AUTO);
+var game = new Phaser.Game(360, 600, Phaser.AUTO);
 
 game.state.add('GameState', GameState);
 game.state.start('GameState');
