@@ -3,16 +3,23 @@ var GameState = {
 
   //initiate game settings
   init: function() {
-this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-this.scale.pageAlignVertically = true // This ceneters the Game vertically
-this.scale.pageAlignHorizontally = true // This ceneters the Game horizontally
-this.game.physics.startSystem(Phaser.Physics.ARCADE) // telling phaser that there will be some physics, by default it doesn't apply to all physics
-this.game.physics.arcade.gravity.y = 1000
+    //adapt to screen size, fit all the game
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+    //game alignment
+    this.scale.pageAlignHorizontally = true;
+    this.scale.pageAlignVertically = true;
+
+    //start physics engine
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    this.game.physics.arcade.gravity.y = 1000
   },
 
   //load the game assets before the game starts
   preload: function() {
 this.load.image('ground', 'assets/images/ground.png')
+this.load.spritesheet('player', 'assets/images/player_spritesheet.png', 28, 30, 5, 1, 1)
+
   },
   //executed after everything is loaded
   create: function() {
@@ -32,6 +39,10 @@ this.load.image('ground', 'assets/images/ground.png')
     this.ground2.body.immovable = true // this makes the ground NOT move.
 
     this.ground3 = this.add.sprite(100, 530, 'ground')
+
+    // player
+    this.player = this.add.sprite(100, 0, 'player', 3)
+    this.player.animations.add('walking', [0,1,2,1], 6, true) // this is the animation for the walking player
   },
 
   update: function() {
