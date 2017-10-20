@@ -40,9 +40,19 @@ this.load.spritesheet('player', 'assets/images/player_spritesheet.png', 28, 30, 
 
     this.ground3 = this.add.sprite(100, 530, 'ground')
 
+    // group of playforms
+    this.platforms = this.add.group() //place holder for spirte that can be used as if it is a sprite
+    this.platforms.enableBody = true
+    this.platforms.create(50, 150, 'player')
+    this.platforms.create(150, 50, 'player')
+    this.platforms.setAll('body.immovable', true)
+    this.platforms.setAll('body.allowGravity', true) // true or false sets or removes gravity to the set of images.
+
     // player
     this.player = this.add.sprite(100, 0, 'player', 3)
-    this.player.animations.add('walking', [0,1,2,1], 6, true) // this is the animation for the walking player
+    this.player.animations.add('walking', [0,1,2,1], 6, true) // this is the animation for the walking player.
+    // the array shows the order of the images
+    this.player.play('walking') // we call play the order loop options.
   },
 
   update: function() {
