@@ -71,11 +71,14 @@ var GameState = {
 
     this.player.body.velocity.x = 0
 
-    if(this.cursors.left.isDown){
+    if(this.cursors.left.isDown) {
       this.player.body.velocity.x = -this.RUNNING_SPEED
-    }
-    if(this.cursors.right.isDown){
+    } else if(this.cursors.right.isDown) {
       this.player.body.velocity.x = this.RUNNING_SPEED
+    }
+// create cursors that will allow user to jump ONLY is it is touching something below him
+    if(this.cursors.up.isDown && this.player.body.touching.down){
+      this.player.body.velocity.y = -this.JUMPING_SPEED
     }
   },
 
