@@ -29,9 +29,12 @@ var GameState = {
     this.load.image('fire', 'assets/images/fire_spritesheet.png', 20, 21, 2, 1, 1)
     this.load.image('goal', 'assets/images/gorilla3.png')
     this.load.image('arrowButton', 'assets/images/arrowButton.png')
+    this.load.image('arrowButtonLeft', 'assets/images/arrowButtonLeft.png')
+    this.load.image('arrowButtonRight', 'assets/images/arrowButtonRight.png')
     this.load.image('actionButton', 'assets/images/actionButton.png')
     this.load.image('barrel', 'assets/images/barrel.png')
     this.load.image('platform', 'assets/images/platform.png')
+    this.load.image('spacebar', 'assets/images/spacebar.png')
 
   },
   //executed after everything is loaded
@@ -55,6 +58,10 @@ var GameState = {
     // the array shows the order of the images
     this.game.physics.arcade.enable(this.player) // we call play the order loop options.
     // this.player.play('walking') // we call play the order loop options.
+    this.player.customParams = {}
+
+    // create on screen controls
+    this.createOnScreenControls()
 
     // // group of playforms
     // this.platforms = this.add.group() //place holder for spirte that can be used as if it is a sprite
@@ -81,6 +88,16 @@ var GameState = {
       this.player.body.velocity.y = -this.JUMPING_SPEED
     }
   },
+
+  createOnScreenControls: function (){
+    this.leftArrow = this.add.button(20, 535, 'arrowButtonLeft')
+    this.rightArrow = this.add.button(80, 535, 'arrowButtonRight')
+    this.action = this.add.button(250, 550, 'spacebar')
+
+    // makes the button transparent
+    this.leftArrow.alpha = 0.7
+    this.rightArrow.alpha = 0.7
+  }
 
 };
 
