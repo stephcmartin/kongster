@@ -20,6 +20,9 @@ var GameState = {
     this.cursors = this.game.input.keyboard.createCursorKeys() // allows users to use the keyboard to play the game
     this.RUNNING_SPEED = 180
     this.JUMPING_SPEED = 550
+
+    // define the size of the world
+    this.game.world.setBounds(0, 0, 360, 700)
   },
 
   //load the game assets before the game starts
@@ -40,7 +43,7 @@ var GameState = {
   //executed after everything is loaded
   create: function() {
     // ground
-    this.ground = this.add.sprite(0, 530, 'ground')
+    this.ground = this.add.sprite(0, 638, 'ground')
     this.game.physics.arcade.enable(this.ground)
     this.ground.body.allowGravity = false // the body gives us access to prototypes e.g velocity and math
     this.ground.body.immovable = true // this means you can't move it even if you step on it
@@ -52,13 +55,14 @@ var GameState = {
     // this.platform.body.immovable = true
 
     // player
-    this.player = this.add.sprite(100, 200, 'player', 3)
+    this.player = this.add.sprite(10, 545, 'player', 3)
     this.player.anchor.setTo(0.5)
     this.player.animations.add('walking', [0,1,2,1], 6, true) // this is the animation for the walking player.
     // the array shows the order of the images
     this.game.physics.arcade.enable(this.player) // we call play the order loop options.
     // this.player.play('walking') // we call play the order loop options.
     this.player.customParams = {}
+    this.game.camera.follow(this.player)
 
     // create on screen controls
     this.createOnScreenControls()
@@ -67,7 +71,7 @@ var GameState = {
     // x and y locations for platform
     let platformData = [
         {"x": 0, "y": 430},
-        // {"x": 45, "y": 560},
+        {"x": 45, "y": 560},
         {"x": 90, "y": 290},
         {"x": 0, "y": 140}
       ]
@@ -154,6 +158,10 @@ var GameState = {
     this.rightArrow.events.onInputOut.add(function(){
       this.player.customParams.isMovingRight = false
     }, this)
+
+    this.leftArrow.fixedToCamera = true
+    this.rightArrow.fixedToCamera = true
+    this.actionButton.fixedToCamera = true
   }
 
 };
