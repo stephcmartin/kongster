@@ -45,11 +45,11 @@ var GameState = {
     this.ground.body.allowGravity = false // the body gives us access to prototypes e.g velocity and math
     this.ground.body.immovable = true // this means you can't move it even if you step on it
 
-    // platform
-    this.platform = this.add.sprite(0, 300, 'platform')
-    this.game.physics.arcade.enable(this.platform)
-    this.platform.body.allowGravity = false
-    this.platform.body.immovable = true
+    // One Single platform
+    // this.platform = this.add.sprite(0, 300, 'platform')
+    // this.game.physics.arcade.enable(this.platform)
+    // this.platform.body.allowGravity = false
+    // this.platform.body.immovable = true
 
     // player
     this.player = this.add.sprite(100, 200, 'player', 3)
@@ -63,10 +63,22 @@ var GameState = {
     // create on screen controls
     this.createOnScreenControls()
 
-    // // group of playforms
-    // this.platforms = this.add.group() //place holder for spirte that can be used as if it is a sprite
-    // this.platforms.setAll('body.immovable', true)
-    // this.platforms.setAll('body.allowGravity', true) // true or false sets or removes gravity to the set of images.
+    // group of platform array
+    // x and y locations for platform
+    let platformData = [
+        {"x": 0, "y": 430},
+        // {"x": 45, "y": 560},
+        {"x": 90, "y": 290},
+        {"x": 0, "y": 140}
+      ]
+
+      this.platforms = this.add.group()
+      this.platforms.enableBody = true
+      platformData.forEach(function(element){
+        this.platforms.create(element.x, element.y, 'platform')
+      }, this)
+      this.platforms.setAll('body.immovable', true) // this means the platforms will not move
+      this.platforms.setAll('body.allowGravity', false) // true or false sets or removes gravity to the set of images.
 
   },
 
@@ -74,7 +86,7 @@ var GameState = {
   update: function() {
     // this.ground.angle += 1 // this spins the ground
     this.game.physics.arcade.collide(this.ground, this.player) // specify which two groups are going to collide
-    this.game.physics.arcade.collide(this.platform, this.player) // These two things do not interfere with each other
+    this.game.physics.arcade.collide(this.platforms, this.player) // These two things do not interfere with each other
 
     this.player.body.velocity.x = 0
 
