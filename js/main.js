@@ -78,25 +78,70 @@ var GameState = {
 
     this.player.body.velocity.x = 0
 
-    if(this.cursors.left.isDown) {
+    if(this.cursors.left.isDown || this.player.customParams.isMovingLeft) {
       this.player.body.velocity.x = -this.RUNNING_SPEED
-    } else if(this.cursors.right.isDown) {
+    } else if(this.cursors.right.isDown || this.player.customParams.isMovingRight) {
       this.player.body.velocity.x = this.RUNNING_SPEED
     }
 // create cursors that will allow user to jump ONLY is it is touching something below him
-    if(this.cursors.up.isDown && this.player.body.touching.down){
+    if((this.cursors.up.isDown || this.player.customParams.mustJump) && this.player.body.touching.down){
       this.player.body.velocity.y = -this.JUMPING_SPEED
+      this.player.customParams.mustJump = false
     }
   },
 
   createOnScreenControls: function (){
     this.leftArrow = this.add.button(20, 535, 'arrowButtonLeft')
     this.rightArrow = this.add.button(80, 535, 'arrowButtonRight')
-    this.action = this.add.button(250, 550, 'spacebar')
+    this.actionButton = this.add.button(250, 550, 'spacebar')
 
     // makes the button transparent
     this.leftArrow.alpha = 0.7
     this.rightArrow.alpha = 0.7
+
+    // actions events for Space bar
+    this.actionButton.events.onInputDown.add(function(){
+      this.player.customParams.mustJump = true
+    }, this)
+
+    this.actionButton.events.onInputUp.add(function(){
+      this.player.customParams.mustJump = false
+    }, this)
+
+    // action events for left button
+    this.leftArrow.events.onInputDown.add(function(){
+      this.player.customParams.isMovingLeft = true
+    }, this)
+
+    this.leftArrow.events.onInputUp.add(function(){
+      this.player.customParams.isMovingLeft = false
+    }, this)
+
+    // for more mobile accuracy
+    this.leftArrow.events.onInputOver.add(function(){
+      this.player.customParams.isMovingLeft = true
+    }, this)
+
+    this.leftArrow.events.onInputOut.add(function(){
+      this.player.customParams.isMovingLeft = false
+    }, this)
+
+    // action events for right button
+    this.rightArrow.events.onInputDown.add(function(){
+      this.player.customParams.isMovingRight = true
+    }, this)
+
+    this.rightArrow.events.onInputUp.add(function(){
+      this.player.customParams.isMovingRight = false
+    }, this)
+
+    this.rightArrow.events.onInputOver.add(function(){
+      this.player.customParams.isMovingRight = true
+    }, this)
+
+    this.rightArrow.events.onInputOut.add(function(){
+      this.player.customParams.isMovingRight = false
+    }, this)
   }
 
 };
