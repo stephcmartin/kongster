@@ -100,6 +100,12 @@ this.levelData.fireData.forEach(function(element){
   fire.play('fire')
 }, this)
   this.fires.setAll('body.allowGravity', false)
+
+  // goal
+  let goal
+  this.goal = this.add.sprite(this.levelData.goal.x, this.levelData.goal.y, 'goal')
+  this.game.physics.arcade.enable(this.goal)
+  this.goal.body.allowGravity = false
   },
 
 // update method gets called multiple times a second
@@ -108,6 +114,7 @@ this.levelData.fireData.forEach(function(element){
     this.game.physics.arcade.collide(this.ground, this.player) // specify which two groups are going to collide
     this.game.physics.arcade.collide(this.platforms, this.player) // These two things do not interfere with each other
     this.game.physics.arcade.overlap(this.player, this.fires, this.killPlayer)
+    this.game.physics.arcade.overlap(this.player, this.goal, this.win)
     this.player.body.velocity.x = 0
 
     if(this.cursors.left.isDown || this.player.customParams.isMovingLeft) {
@@ -187,9 +194,13 @@ this.levelData.fireData.forEach(function(element){
     this.actionButton.fixedToCamera = true
   },
   killPlayer: function (player, fire){
-    console.log('ouch!')
+  alert('Ouch! You Lose.')
       game.state.start('GameState');
-    }
+    },
+  win: function (player, goal){
+      alert('you won!')
+        game.state.start('GameState');
+      }
 
 };
 
