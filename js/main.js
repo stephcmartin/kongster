@@ -59,7 +59,7 @@ var GameState = {
     // player
     this.player = this.add.sprite(0, 545, 'player', 3)
     this.player.anchor.setTo(0.5)
-    this.player.animations.add('walking', [0,1,2,1], 6, true) // this is the animation for the walking player.
+    this.player.animations.add('walking', [0, 1 , 2 , 1], 6, true) // this is the animation for the walking player.
     // the array shows the order of the images
     this.game.physics.arcade.enable(this.player) // we call play the order loop options.
     // this.player.play('walking') // we call play the order loop options.
@@ -88,7 +88,18 @@ this.levelData = JSON.parse(this.game.cache.getText('level'))
       }, this)
       this.platforms.setAll('body.immovable', true) // this means the platforms will not move
       this.platforms.setAll('body.allowGravity', false) // true or false sets or removes gravity to the set of images.
+// fire_spritesheet
 
+this.fires = this.add.group()
+this.fires.enableBody = true
+
+let fire
+this.levelData.fireData.forEach(function(element){
+  fire = this.fires.create(element.x, element.y, 'fire')
+  fire.animations.add('fire', [0, 1], 4, true)
+  fire.play('fire')
+}, this)
+  this.fires.setAll('body.allowGravity', false)
   },
 
 // update method gets called multiple times a second
@@ -96,13 +107,20 @@ this.levelData = JSON.parse(this.game.cache.getText('level'))
     // this.ground.angle += 1 // this spins the ground
     this.game.physics.arcade.collide(this.ground, this.player) // specify which two groups are going to collide
     this.game.physics.arcade.collide(this.platforms, this.player) // These two things do not interfere with each other
-
+    this.game.physics.arcade.overlap(this.player, this.fires, this.killPlayer)
     this.player.body.velocity.x = 0
 
     if(this.cursors.left.isDown || this.player.customParams.isMovingLeft) {
       this.player.body.velocity.x = -this.RUNNING_SPEED
+      this.player.scale.setTo(1, 1)
+      this.player.play('walking')
     } else if(this.cursors.right.isDown || this.player.customParams.isMovingRight) {
       this.player.body.velocity.x = this.RUNNING_SPEED
+      this.player.scale.setTo(-1, 1)
+      this.player.play('walking')
+    } else {
+      this.player.animations.stop()
+      this.player.frame = 3
     }
 // create cursors that will allow user to jump ONLY is it is touching something below him
     if((this.cursors.up.isDown || this.player.customParams.mustJump) && this.player.body.touching.down){
@@ -167,7 +185,11 @@ this.levelData = JSON.parse(this.game.cache.getText('level'))
     this.leftArrow.fixedToCamera = true
     this.rightArrow.fixedToCamera = true
     this.actionButton.fixedToCamera = true
-  }
+  },
+  killPlayer: function (player, fire){
+    console.log('ouch!')
+      game.state.start('GameState');
+    }
 
 };
 
