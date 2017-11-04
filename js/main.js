@@ -69,14 +69,11 @@ var GameState = {
     // create on screen controls
     this.createOnScreenControls()
 
-    // group of platform array
-    // x and y locations for platform
-    // let platformData = [
-    //     {"x": 0, "y": 430},
-    //     {"x": 45, "y": 560},
-    //     {"x": 90, "y": 290},
-    //     {"x": 0, "y": 140}
-    //   ]
+    // create barrels
+    this.barrels = this.add.group()
+    this.barrels.enableBody = true
+    this.createBarrel()
+    this.barrelCreator = this.game.time.events.loop(Phaser.Timer.SECOND * this.levelData.barrelFrequency, this.createBarrel, this)
 
 //parse the file
 this.levelData = JSON.parse(this.game.cache.getText('level'))
@@ -113,8 +110,11 @@ this.levelData.fireData.forEach(function(element){
     // this.ground.angle += 1 // this spins the ground
     this.game.physics.arcade.collide(this.ground, this.player) // specify which two groups are going to collide
     this.game.physics.arcade.collide(this.platforms, this.player) // These two things do not interfere with each other
+    this.game.physics.arcade.collide(this.barrels, this.ground)
+    this.game.physics.arcade.collide(this.barrels, this.platforms)
     this.game.physics.arcade.overlap(this.player, this.fires, this.killPlayer)
     this.game.physics.arcade.overlap(this.player, this.goal, this.win)
+    this.game.physics.arcade.overlap(this.player, this.barrels, this.killPlayer)
     this.player.body.velocity.x = 0
 
     if(this.cursors.left.isDown || this.player.customParams.isMovingLeft) {
@@ -134,9 +134,16 @@ this.levelData.fireData.forEach(function(element){
       this.player.body.velocity.y = -this.JUMPING_SPEED
       this.player.customParams.mustJump = false
     }
+
+    this.barrels.forEach(function(element){
+      if(element.x < 10 && element.y > 600) {
+        element.kill()
+      }
+    }, this)
   },
 
   createOnScreenControls: function (){
+    this.levelData = JSON.parse(this.game.cache.getText('level'))
     this.leftArrow = this.add.button(20, 535, 'arrowButtonLeft')
     this.rightArrow = this.add.button(80, 535, 'arrowButtonRight')
     this.actionButton = this.add.button(250, 550, 'spacebar')
@@ -198,8 +205,19 @@ this.levelData.fireData.forEach(function(element){
       game.state.start('GameState');
     },
   win: function (player, goal){
-      alert('you won!')
+      alert('You Won!')
         game.state.start('GameState');
+      },
+  createBarrel: function(){
+    // create first dead sprite if there is any
+    let barrel = this.barrels.getFirstExists(false)
+      if(!barrel) {
+        barrel = this.barrels.create(20, 90, 'barrel')
+      }
+        barrel.body.collideWorldBounds = true // makes barrels stop at the 'side ends'
+        barrel.body.bounce.set(1, 0) // bounces off the end
+        barrel.reset(this.levelData.goal.x, this.levelData.goal.y)
+        barrel.body.velocity.x = this.levelData.barrelSpeed
       }
 
 };
